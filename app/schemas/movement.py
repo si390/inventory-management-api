@@ -13,6 +13,6 @@ class MovementCreate(MovementBase):
 
 class Movement(MovementBase):
     id: int
-
+    user_id: int
     class Config:
         orm_mode = True

@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from app.core.config import settings
-from app.api.v1.routes import products, users, auth
+from app.api.v1.routes import products, users, auth, movements
 
 
 app = FastAPI(title=settings.PROJECT_NAME)
@@ -22,6 +22,11 @@ app.include_router(
     tags=["Auth"],
 )
 
+app.include_router(
+    movements.router,
+    prefix=f"{settings.API_V1_STR}/movements",
+    tags=["Movements"],
+)
 
 @app.get("/")
 def root():

@@ -12,3 +12,6 @@ class Movement(Base):
 
     product_id = Column(Integer, ForeignKey("products.id"), nullable=False)
     product = relationship("Product")
+
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    user = relationship("User")
