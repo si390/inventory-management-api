@@ -1,8 +1,12 @@
 from pydantic import BaseModel
+from enum import Enum
 
+class MovementType(str, Enum):
+    IN = "IN"
+    OUT = "OUT"
 
 class MovementBase(BaseModel):
-    type: str  # "IN" o "OUT"
+    type: MovementType
     quantity: int
     product_id: int
 
