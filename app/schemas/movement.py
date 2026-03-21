@@ -14,9 +14,11 @@ class MovementBase(BaseModel):
 class MovementCreate(MovementBase):
     pass
 
-
 class Movement(MovementBase):
     id: int
     user_id: int
     class Config:
         orm_mode = True
+
+class MovementWithBalance(Movement):
+    balance_after: int

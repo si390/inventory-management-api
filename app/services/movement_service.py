@@ -40,3 +40,41 @@ def get_movements(db: Session):
 
 def get_movements_by_user(db: Session, user_id: int):
     return db.query(Movement).filter(Movement.user_id == user_id).all()
+
+def get_product_history(db: Session, product_id: int):
+    return (
+        db.query(Movement)
+        .filter(Movement.product_id == product_id)
+        .order_by(Movement.created_at.asc())
+        .all()
+    )
+
+def get_product_history_with_balance(db: Session, product_id: int):
+    movements = (
+        db.query(Movement)
+        .filter(Movement.product_id == product_id)
+        .order_by(Movement.created_at.asc())
+        .all()
+    )
+
+    balance = 0
+    history = []
+
+    for m in movements:
+        if m.type == "IN":
+            balance += m.quantity
+        else:
+            balance -= m.quantity
+
+        history.append({
+            "id": m.id,
+            "type": m.type,
+            "quantity": m.quantity,
+            "product_id": m.product_id,
+            "user_id": m.user_id,
+            "created_at": m.created_at,
+            "balance_after": balance
+        })
+
+    return history
+

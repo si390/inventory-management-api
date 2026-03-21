@@ -1,5 +1,6 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
+from datetime import datetime
 from app.db.session import Base
 
 
@@ -15,3 +16,6 @@ class Movement(Base):
 
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     user = relationship("User")
+
+    created_at = Column(DateTime, default=datetime.utcnow)
+
