@@ -1,6 +1,11 @@
-from sqlalchemy import Column, Integer, String, Boolean
+from sqlalchemy import Column, Integer, String, Boolean, Enum
+import enum
 from app.db.session import Base
 
+class UserRole(str, enum.Enum):
+    admin = "admin"
+    supervisor = "supervisor"
+    operator = "operator"
 
 class User(Base):
     __tablename__ = "users"
@@ -9,4 +14,4 @@ class User(Base):
     email = Column(String, unique=True, index=True, nullable=False)
     hashed_password = Column(String, nullable=False)
     is_active = Column(Boolean, default=True)
-    is_superuser = Column(Boolean, default=False)
+    role = Column(Enum(UserRole), default=UserRole.operator)

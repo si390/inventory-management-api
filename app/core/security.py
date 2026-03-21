@@ -7,11 +7,21 @@ from app.services.user_service import get_user_by_id
 from jose import jwt, JWTError
 from fastapi.security import OAuth2PasswordBearer
 from passlib.context import CryptContext
-from app.models.user import User
+from app.models.user import User, UserRole
 from app.core.config import settings
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/login")
+
+def require_role(required_roles: list[UserRole]):
+    def role_checker(current_user: User = Depends(get_current_active_user)):
+        if current_user.role not in required_roles:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Not enough permissions"
+            )
+        return current_user
+    return role_checker
 
 def create_access_token(subject: str, expires_delta: Optional[int] = None) -> str:
     if expires_delta is not None:
@@ -88,3 +98,7 @@ def get_password_hash(password: str) -> str:
     return pwd_context.hash(password)
 
 
+
+get_admin = require_role([UserRole.admin])
+get_supervisor = require_role([UserRole.admin, UserRole.supervisor])
+get_operator = require_role([UserRole.admin, UserRole.supervisor, UserRole.operator])

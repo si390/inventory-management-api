@@ -1,10 +1,11 @@
 from pydantic import BaseModel, EmailStr
+from app.models.user import UserRole
 
 
 class UserBase(BaseModel):
     email: EmailStr
     is_active: bool = True
-    is_superuser: bool = False
+    role: UserRole = UserRole.operator
 
 
 class UserCreate(UserBase):
